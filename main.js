@@ -2,15 +2,15 @@
 const program = require("commander");
 // fsモジュールをインポート
 const fs = require("fs");
-// markedモジュールをインポート
-const marked = require("marked");
+// md2htmlをインポート
+const md2html = require("./md2html");
 
 // コマンドライン引数を取得する
 program.option("--gfm", "GFMを有効にする");
 program.parse(process.args);
 const filePath = program.args[0];
 
-// コマンドライン引数のオプションを取得し、デフォルトのオプションを上書きする
+// デフォルトのオプションを上書きする
 const cliOptions = {
   gfm: false,
   ...program.opts(),
@@ -24,10 +24,7 @@ fs.readFile(filePath, { encoding: "utf8" }, (err, file) => {
     process.exit(1);
     return;
   }
-  // htmlへ変換を行う
-  // gfm(GitHub Flavored Markdown)オプションの有効無効を設定する
-  const html = marked(file, {
-    gfm: cliOptions.gfm,
-  });
+  // md2htmlでhtmlへ変換する
+  const html = md2html(file, cliOptions);
   console.log(html);
 })
